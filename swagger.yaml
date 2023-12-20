@@ -8,7 +8,7 @@ info:
     Some useful links:
     - [The Area repository](https://github.com/orgs/Flagada2000/repositories)
 
-  version: 1.0.0
+  version: 1.0.1
 
 tags:
   - name: Auth
@@ -52,6 +52,47 @@ paths:
                     $ref: '#/components/schemas/Session'
         '401':
           description: Authentification échouée
+        '500':
+          description: Erreur serveur
+  /auth/signup:
+    post:
+      tags:
+        - Auth
+      summary: Inscription de l'utilisateur
+      description: Permet aux nouveaux utilisateurs de créer un compte en utilisant leur email et mot de passe.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  examples: [nouvelutilisateur@example.com]
+                password:
+                  type: string
+                  format: password
+                  minLength: 6
+                  examples: [nouveaumotdepasse123]
+      responses:
+        '201':
+          description: Inscription réussie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+                  session:
+                    $ref: '#/components/schemas/Session'
+        '400':
+          description: Données invalides fournies
         '500':
           description: Erreur serveur
 components:
