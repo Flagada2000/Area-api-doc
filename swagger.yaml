@@ -1,0 +1,73 @@
+openapi: 3.1.0
+info:
+  title: Area API - OpenAPI 3.1
+  description: |-
+    This is the doc for the Area Project based on the OpenAPI 3.1 specification.  You can find out more about
+    the project at [https://github.com/Flagada2000](https://github.com/Flagada2000).
+
+    Some useful links:
+    - [The Area repository](https://github.com/orgs/Flagada2000/repositories)
+
+  version: 1.0.0
+
+tags:
+  - name: Auth
+    description: Everything about Authentication
+paths:
+  /auth/signin:
+    post:
+      tags:
+      - Auth
+      summary: Connexion de l'utilisateur
+      description: Permet aux utilisateurs de se connecter en utilisant leur email et mot de passe.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  examples: [utilisateur@example.com]
+                password:
+                  type: string
+                  format: password
+                  examples: [motdepasse123]
+      responses:
+        '200':
+          description: Connexion réussie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+                  session:
+                    $ref: '#/components/schemas/Session'
+        '401':
+          description: Authentification échouée
+        '500':
+          description: Erreur serveur
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+    Session:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          format: jwt
