@@ -106,9 +106,39 @@ components:
         email:
           type: string
           format: email
+        email_confirmed_at:
+          type: string
+          format: date-time
+        phone:
+          type: string
+          format: phone
+        phone_confirmed_at:
+          type: string
+          format: date-time
+        last_sign_in_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
     Session:
       type: object
       properties:
-        accessToken:
+        access_token:
           type: string
           format: jwt
+        token_type:
+          type: string
+          enum: [bearer]
+        expires_in:
+          type: integer
+          format: int32
+          description: Durée de validité du token en secondes
+        refresh_token:
+          type: string
+          format: jwt
+        user:
+          $ref: '#/components/schemas/User'
