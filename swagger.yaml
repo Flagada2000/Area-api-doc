@@ -52,8 +52,30 @@ paths:
                     $ref: '#/components/schemas/Session'
         '401':
           description: Authentification échouée
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: "Email ou mot de passe incorrect"
         '500':
           description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: "Erreur serveur"
   /auth/signup:
     post:
       tags:
@@ -93,8 +115,30 @@ paths:
                     $ref: '#/components/schemas/Session'
         '400':
           description: Données invalides fournies
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: "Email ou mot de passe invalide"
         '500':
           description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: "Erreur serveur"
 components:
   schemas:
     User:
