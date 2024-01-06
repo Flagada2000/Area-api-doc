@@ -15,29 +15,28 @@ tags:
     description: Everything about Authentication
 paths:
   /auth/signin:
-    post:
+    get:
       tags:
       - Auth
       summary: Connexion de l'utilisateur
       description: Permet aux utilisateurs de se connecter en utilisant leur email et mot de passe.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - email
-                - password
-              properties:
-                email:
-                  type: string
-                  format: email
-                  examples: [utilisateur@example.com]
-                password:
-                  type: string
-                  format: password
-                  examples: [motdepasse123]
+      parameters:
+        - in: query
+          name: email
+          required: true
+          schema:
+            type: string
+            format: email
+          description: Email de l'utilisateur
+          example: utilisateur@example.com
+        - in: query
+          name: password
+          required: true
+          schema:
+            type: string
+            format: password
+          description: Mot de passe de l'utilisateur
+          example: motdepasse123
       responses:
         '200':
           description: Connexion réussie
@@ -59,10 +58,10 @@ paths:
                 properties:
                   statusCode:
                     type: integer
-                    example: 401
+                    examples: [401]
                   message:
                     type: string
-                    example: "Email ou mot de passe incorrect"
+                    examples: ["Email ou mot de passe incorrect"]
         '500':
           description: Erreur serveur
           content:
@@ -72,10 +71,10 @@ paths:
                 properties:
                   statusCode:
                     type: integer
-                    example: 500
+                    examples: [500]
                   message:
                     type: string
-                    example: "Erreur serveur"
+                    examples: ["Erreur serveur"]
   /auth/signup:
     post:
       tags:
@@ -122,10 +121,10 @@ paths:
                 properties:
                   statusCode:
                     type: integer
-                    example: 400
+                    examples: [400]
                   message:
                     type: string
-                    example: "Email ou mot de passe invalide"
+                    examples: ["Email ou mot de passe invalide"]
         '500':
           description: Erreur serveur
           content:
@@ -135,10 +134,11 @@ paths:
                 properties:
                   statusCode:
                     type: integer
-                    example: 500
+                    examples: [500]
                   message:
                     type: string
-                    example: "Erreur serveur"
+                    examples: ["Erreur serveur"]
+
   /auth/me:
     get:
       tags:
@@ -161,10 +161,10 @@ paths:
                 properties:
                   statusCode:
                     type: integer
-                    example: 401
+                    examples: [401]
                   message:
                     type: string
-                    example: "No access token found"
+                    examples: ["No access token found"]
         '500':
           description: Server error
           content:
@@ -174,11 +174,12 @@ paths:
                 properties:
                   statusCode:
                     type: integer
-                    example: 500
+                    examples: [500]
                   message:
                     type: string
-                    example: "An unexpected error occurred"
-    /actions/create:
+                    examples: ["An unexpected error occurred"]
+
+  /actions/create:
     post:
       tags:
       - Actions
@@ -218,23 +219,19 @@ paths:
         '500':
           description: Server error
 
-  /actions/delete:
+  /actions/delete/{id}:
     delete:
       tags:
       - Actions
       summary: Delete a user action
       description: Allows authenticated users to delete an existing action.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - id
-              properties:
-                id:
-                  type: integer
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the action to delete
       responses:
         '200':
           description: Action deleted successfully
@@ -286,6 +283,24 @@ components:
         updated_at:
           type: string
           format: date-time
+    Session:
+      type: object
+      properties:
+        access_token:
+          type: string
+          format: jwt
+        token_type:
+          type: string
+          enum: [bearer]
+        expires_in:
+          type: integer
+          format: int32
+          description: Durée de validité du token en secondes
+        refresh_token:
+          type: string
+          format: jwt
+        user:
+          $ref: '#/components/schemas/User'
     CreateUserActionDto:
       type: object
       required:
@@ -309,21 +324,3 @@ components:
           type: integer
         action_config:
           type: string
-    Session:
-      type: object
-      properties:
-        access_token:
-          type: string
-          format: jwt
-        token_type:
-          type: string
-          enum: [bearer]
-        expires_in:
-          type: integer
-          format: int32
-          description: Durée de validité du token en secondes
-        refresh_token:
-          type: string
-          format: jwt
-        user:
-          $ref: '#/components/schemas/User'
