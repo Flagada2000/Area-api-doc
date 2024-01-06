@@ -139,6 +139,124 @@ paths:
                   message:
                     type: string
                     example: "Erreur serveur"
+  /auth/me:
+    get:
+      tags:
+      - Auth
+      summary: Get user information
+      description: Retrieves the current user's information based on the access token.
+      responses:
+        '200':
+          description: User information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: "No access token found"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: "An unexpected error occurred"
+    /actions/create:
+    post:
+      tags:
+      - Actions
+      summary: Create a new user action
+      description: Allows authenticated users to create a new action.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserActionDto'
+      responses:
+        '201':
+          description: Action created successfully
+        '401':
+          description: Unauthorized access
+        '500':
+          description: Server error
+
+  /actions/update:
+    patch:
+      tags:
+      - Actions
+      summary: Update a user action
+      description: Allows authenticated users to update an existing action.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserActionDto'
+      responses:
+        '200':
+          description: Action updated successfully
+        '401':
+          description: Unauthorized access
+        '500':
+          description: Server error
+
+  /actions/delete:
+    delete:
+      tags:
+      - Actions
+      summary: Delete a user action
+      description: Allows authenticated users to delete an existing action.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: integer
+      responses:
+        '200':
+          description: Action deleted successfully
+        '401':
+          description: Unauthorized access
+        '500':
+          description: Server error
+
+  /actions/user:
+    get:
+      tags:
+      - Actions
+      summary: Retrieve user's actions
+      description: Retrieves all actions associated with the authenticated user.
+      responses:
+        '200':
+          description: Actions retrieved successfully
+        '401':
+          description: Unauthorized access
+        '500':
+          description: Server error
+
 components:
   schemas:
     User:
@@ -168,6 +286,29 @@ components:
         updated_at:
           type: string
           format: date-time
+    CreateUserActionDto:
+      type: object
+      required:
+        - action_id
+        - action_config
+      properties:
+        action_id:
+          type: integer
+        action_config:
+          type: string
+    UpdateUserActionDto:
+      type: object
+      required:
+        - id
+        - action_id
+        - action_config
+      properties:
+        id:
+          type: integer
+        action_id:
+          type: integer
+        action_config:
+          type: string
     Session:
       type: object
       properties:
